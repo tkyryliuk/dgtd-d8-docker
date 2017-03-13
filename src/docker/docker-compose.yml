@@ -1,0 +1,52 @@
+version: "2"
+
+services:
+
+  php:
+    image: skilldlabs/${PHP_IMAGE} # Allowed: 7.0, 5.6.
+    container_name: "${COMPOSE_PROJECT_NAME}_php"
+    depends_on:
+      - mysql
+    volumes:
+      - ../../build:/var/www:z
+      - ../modules:/var/www/web/modules/custom:z
+      - ../themes:/var/www/web/themes/custom:z
+    restart: always
+    networks:
+      - front
+
+  nginx:
+    image: wodby/drupal-nginx:8-1.10-2.0.0
+    container_name: "${COMPOSE_PROJECT_NAME}_web"
+    depends_on:
+      - php
+    volumes_from:
+      - php
+    restart: always
+    environment:
+      NGINX_BACKEND_HOST: php
+      NGINX_SERVER_ROOT: /var/www/web/
+    networks:
+      - front
+
+  mysql:
+    image: percona:5.7
+    container_name: "${COMPOSE_PROJECT_NAME}_mysql"
+    volumes:
+      - /dev/shm/${COMPOSE_PROJECT_NAME}_mysql:/var/lib/mysql:Z
+    environment:
+      MYSQL_DATABASE: d8
+      MYSQL_USER: d8
+      MYSQL_PASSWORD: d8
+      MYSQL_ROOT_PASSWORD: d8root
+    restart: always
+    networks:
+      - front
+
+networks:
+  front:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "${IPRANGE}"
