@@ -23,7 +23,6 @@ install:
 	make -s reinstall
 
 reinstall:
-	docker-compose exec php apk add --no-cache git; \
 	docker-compose exec php sh -c "cd ../ && composer install --prefer-dist --optimize-autoloader"; \
 	make -s si;
 
@@ -55,9 +54,9 @@ exec:
 clean: info
 	@echo "Removing networks for $(COMPOSE_PROJECT_NAME)"
 ifeq ($(shell docker inspect --format="{{ .State.Running }}" $(COMPOSE_PROJECT_NAME)_php 2> /dev/null),true)
-	docker-compose down; \
-	sudo rm -rf build
+	docker-compose down;
 endif
+	if [ -d "build" ]; then docker run --rm -v $(shell pwd):/mnt skilldlabs/$(PHP_IMAGE) ash -c "rm -rf /mnt/build"; fi
 
 net:
 ifeq ($(strip $(shell docker network ls | grep $(COMPOSE_PROJECT_NAME))),)
