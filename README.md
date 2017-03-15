@@ -33,4 +33,3 @@ For Linux install <a href="https://docs.docker.com/compose/install/" target="_bl
 * `make exec` - docker exec into php container.
 * `docker-compose stop` - stop running services
 * `docker-compose start` - start services (use  after creating of the project)
-

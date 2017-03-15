@@ -22,7 +22,6 @@ services:
   mailhog:
     image: skilldlabs/mailhog
     container_name: "${COMPOSE_PROJECT_NAME}_mail"
-    restart: always
     networks:
       - front
 
