@@ -10,8 +10,7 @@ ifeq ($(strip $(COMPOSE_PROJECT_NAME)),projectname)
 $(error Project name can not be default, please edit ".env" and set COMPOSE_PROJECT_NAME variable.)
 endif
 
-build:
-	make -s clean
+build: clean
 	cp -r src/composer build
 	mkdir -p /dev/shm/${COMPOSE_PROJECT_NAME}_mysql
 
